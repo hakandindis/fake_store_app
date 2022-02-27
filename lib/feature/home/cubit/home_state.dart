@@ -1,10 +1,21 @@
 part of 'home_cubit.dart';
 
-abstract class HomeState extends Equatable {
-  const HomeState();
+class HomeState extends Equatable {
+  const HomeState({this.items, this.isLoading});
+
+  final List<ProductModel>? items;
+  final bool? isLoading;
 
   @override
-  List<Object> get props => [];
-}
+  List<Object?> get props => [items, isLoading];
 
-class HomeInitial extends HomeState {}
+  HomeState copyWith({
+    List<ProductModel>? items,
+    bool? isLoading,
+  }) {
+    return HomeState(
+      items: items ?? this.items,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}

@@ -6,7 +6,7 @@ enum _HomeServicePath { products }
 
 abstract class IHomeService {
   late final INetworkManager _networkManager;
-
+ 
   IHomeService(INetworkManager networkManager)
       : _networkManager = networkManager;
 
