@@ -1,11 +1,12 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:fake_store_app/feature/home/cubit/home_cubit.dart';
 import 'package:fake_store_app/feature/home/service/home_service.dart';
 import 'package:fake_store_app/product/constant/application_constant.dart';
 import 'package:fake_store_app/product/network/product_network_manager.dart';
-import 'package:fake_store_app/product/padding/page_padding.dart';
-import 'package:fake_store_app/product/utility/image/project_network_image.dart';
 import 'package:fake_store_app/product/widget/loading_center_widget.dart';
 import 'package:fake_store_app/product/widget/product_card.dart';
+import 'package:fake_store_app/product/widget/product_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
@@ -24,10 +25,19 @@ class _HomeViewState extends State<HomeView> {
       create: (context) => HomeCubit(HomeService(ProductNetworkManager())),
       child: Scaffold(
         appBar: AppBar(
-          leading: _loadingCenter(),
+          leading: _dropdownProject(),
+          actions: [_loadingCenter()],
         ),
         body: _bodyListView(),
       ),
+    );
+  }
+
+  Widget _dropdownProject() {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return ProductDropDown(items: state.categories ?? []);
+      },
     );
   }
 
@@ -58,3 +68,18 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
+// class _ProductChangeDropdown extends StatelessWidget {
+//   const _ProductChangeDropdown({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<String>(
+//         items: [DropdownMenuItem(child: Text("hakan"), value: '')],
+//         onChanged: (String? value) {
+
+//         });
+//   }
+// }

@@ -8,7 +8,7 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeService) : super(const HomeState()) {
     //Future.microtask(fetchAllItems);
-    fetchAllItems();
+    Future.wait([fetchAllItems(), fetchAllCategories()]);
   }
 
   final HomeService homeService;
@@ -19,6 +19,11 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(state.copyWith(items: response ?? []));
     _changeLoading();
+  }
+
+  Future<void> fetchAllCategories() async {
+    final response = await homeService.fetchAllCategories();
+    emit(state.copyWith(categories: response));
   }
 
   void _changeLoading() {
