@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ProductDropDown extends StatefulWidget {
-  const ProductDropDown({Key? key, required this.items}) : super(key: key);
+  const ProductDropDown({
+    Key? key,
+    required this.items,
+    required this.onSelected,
+  }) : super(key: key);
 
   final List<String> items;
-
+  final void Function(String categories) onSelected;
   @override
   State<ProductDropDown> createState() => _ProductDropDownState();
 }
@@ -26,6 +30,7 @@ class _ProductDropDownState extends State<ProductDropDown> {
     setState(() {
       _selectedValue = data!;
     });
+    widget.onSelected(data!);
   }
 
   @override

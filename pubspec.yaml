@@ -47,6 +47,7 @@ dependencies:
   #google
   json_serializable: ^6.1.4
   json_annotation: ^4.4.0
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

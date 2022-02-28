@@ -19,13 +19,38 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _listenScroll(BuildContext context) {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        context.read<HomeCubit>().fetchNewItems();
+        //print("hakan");
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("homeview build method executed");
     return BlocProvider(
       create: (context) => HomeCubit(HomeService(ProductNetworkManager())),
       child: Scaffold(
         appBar: AppBar(
-          leading: _dropdownProject(),
+          title: _dropdownProject(),
+          centerTitle: false,
           actions: [_loadingCenter()],
         ),
         body: _bodyListView(),
@@ -36,19 +61,39 @@ class _HomeViewState extends State<HomeView> {
   Widget _dropdownProject() {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return ProductDropDown(items: state.categories ?? []);
+        return ProductDropDown(
+          items: state.categories ?? [],
+          onSelected: (String data) {
+            context.read<HomeCubit>().selectedCategories(data);
+          },
+        );
       },
     );
   }
 
   Widget _bodyListView() {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state.isInitial) {
+          _listenScroll(context);
+        }
+      },
       builder: (context, state) {
         return ListView.builder(
-            itemCount: state.items?.length ?? kZero.toInt(),
-            itemBuilder: (context, index) => ProductCard(
-                  model: state.items?[index],
-                ));
+          controller: _scrollController,
+          itemCount: state.selectItems?.length ?? kZero.toInt(),
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                ProductCard(model: state.selectItems?[index]),
+                (state.selectItems.isNotNullOrEmpty) &&
+                        (index == state.selectItems!.length - 1)
+                    ? const LoadingCenter()
+                    : const SizedBox.shrink(),
+              ],
+            );
+          },
+        );
       },
     );
   }
