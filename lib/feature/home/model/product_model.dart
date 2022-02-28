@@ -26,7 +26,7 @@ class ProductModel extends INetworkModel<ProductModel?> with EquatableMixin {
 
   @override
   String toString() {
-    return 'title: $title \n, price: $price \n, description: $description \n, category: $category \n';
+    return 'id: $id \ntitle: $title \nprice: $price \ndescription: $description \ncategory: $category';
   }
 
   @override
